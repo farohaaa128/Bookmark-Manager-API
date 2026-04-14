@@ -1,0 +1,21 @@
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
+const authMiddleWare = (req,res,next) => {
+    authKey = req.headers.authorization;
+    if(!authKey)
+    {
+        res.status(401).json({
+            status : "error",
+            message : "Unauthenticated User"
+        })
+    }
+    else
+    {
+        const token = authKey.split(" ")[1];
+        req.user = jwt.verify(token, process.env.JWT_SECRT);
+        next();
+    }
+};
+
+module.exports = authMiddleWare;
